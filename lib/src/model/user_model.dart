@@ -10,6 +10,14 @@ sealed class UserModel {
     required this.email,
     this.avatar,
   });
+
+  factory UserModel.fromMap(Map<String, dynamic> json) {
+    return switch (json['profile']) {
+      'ADM' => UserModelADM.fromMap(json),
+      'EMPLOYEE' => UserModelEmployee.fromMap(json),
+      _ => throw ArgumentError('User profile not found')
+    };
+  }
 }
 
 class UserModelADM extends UserModel {
@@ -46,7 +54,7 @@ class UserModelADM extends UserModel {
 }
 
 class UserModelEmployee extends UserModel {
-  final int barbarshopId;
+  final int barbershopId;
   final List<String> workDays;
   final List<int> workHours;
 
@@ -55,7 +63,7 @@ class UserModelEmployee extends UserModel {
     required super.name,
     required super.email,
     super.avatar,
-    required this.barbarshopId,
+    required this.barbershopId,
     required this.workDays,
     required this.workHours,
   });
@@ -66,7 +74,7 @@ class UserModelEmployee extends UserModel {
         'id': int id,
         'name': String name,
         'email': String email,
-        'barbarshop_id': int barbarshopId,
+        'barbershop_id': int barbershopId,
         'work_days': List workDays,
         'work_hours': List workHours,
       } =>
@@ -75,7 +83,7 @@ class UserModelEmployee extends UserModel {
           name: name,
           email: email,
           avatar: json['avatar'],
-          barbarshopId: barbarshopId,
+          barbershopId: barbershopId,
           workDays: workDays.cast<String>(),
           workHours: workHours.cast<int>(),
         ),
